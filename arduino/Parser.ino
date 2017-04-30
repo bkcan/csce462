@@ -80,7 +80,13 @@ void SeparateKey(String s){ //separates the key:value string into 2 strings. 1 f
     Serial.println(key);
     Serial.print("Value: ");
     Serial.println(value);
-    //maybe add a few lines so that the values become ints/doubles instead of strings
+    //a few lines so that the values become ints/doubles instead of strings
+    if (key == "startX" || key == "endX" || key == "startY" || key == "endY" || key == "startZ" || key == "endZ"){
+        const char *mychar = value.c_str();
+        double dVal = atof(mychar);
+        Serial.print("Double: ");
+        Serial.println(dVal);
+    }
 }
 
 
