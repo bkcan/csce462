@@ -28,7 +28,7 @@ void loop() {
   if (mySerial.available()) {
     c = mySerial.readString();  
     //below are sample strings. One is manual and one is auto
-    //c = "manual,up,right,left,"; 
+    //c = "manual,up,manual,right,manual,left,"; 
     //c = "auto,cameraType:camera,filmType:timpelapse,startX:degrees,startY:12,startZ:0,endX:degrees,endY:80,endZ:15,";
     Serial.print("Original: ");
     Serial.println(c);
@@ -62,8 +62,12 @@ String * parseCommand(String s){ //separates string whenever a comma is read
     mode = myarray[0];
     Serial.println("Parsed Strings: "); //Separated commands are in this for loop
     for (int j = 1; j < array_size; j++){
-        Serial.println(myarray[j]); //modify code here to use
+        if (mode == "manual" && j%2 != 0){ //if manual mode, then commands only have odd index
+          Serial.println(myarray[j]); //modify code here to use
+        }
+        
         if (mode == "auto"){ //If mode is auto, separate keys and values
+            Serial.println(myarray[j]);
             SeparateKey(myarray[j]); //in this case each myarray[j] will be a string in this form key:value. A key and value separated by colon 
         }
         
