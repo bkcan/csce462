@@ -96,12 +96,41 @@ void SeparateKey(String s){ //separates the key:value string into 2 strings. 1 f
     Serial.println(key);
     Serial.print("Value: ");
     Serial.println(value);
-    //maybe add a few lines so that the values become ints/doubles instead of strings
+    double dVal;
+    //Might need to make the below vars into global vars 
+    double xStart;
+    double xEnd;
+    double yStart;
+    double yEnd;
+    double zStart;
+    double zEnd;
+    //a few lines so that the values become ints/doubles instead of strings
     if (key == "startX" || key == "endX" || key == "startY" || key == "endY" || key == "startZ" || key == "endZ"){
         const char *mychar = value.c_str();
-        double dVal = atof(mychar);
+        dVal = atof(mychar);
         Serial.println(dVal);
     }
+
+    //assigns double values to the corresponding variables. For passing values to function
+    if (strcmp(key.c_str(),"startX")==0) {
+        xStart = dVal;
+    } 
+    else if (strcmp(key.c_str(),"endX")==0) {
+        xEnd = dVal;
+    } 
+    else if (strcmp(key.c_str(),"startY")==0) {
+        yStart = dVal;
+    } 
+    else if (strcmp(key.c_str(),"endY")==0) {
+        yEnd = dVal;
+    } 
+    else if (strcmp(key.c_str(),"startZ")==0) {
+        zStart = dVal;
+    } 
+    else if (strcmp(key.c_str(),"endZ")==0) {
+        zEnd = dVal;
+    } 
+    else { Serial.println("ERROR: Invalid Key!"); }
     
 }
 
