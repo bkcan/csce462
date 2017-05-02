@@ -1,3 +1,4 @@
+//pins for easyDriver 
 #define DIR_PIN_Rotating 2
 #define STEP_PIN_Rotating 3
 
