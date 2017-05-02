@@ -18,7 +18,7 @@ void setup() {
 }
 
 //example automatic command
-//"cameraType:camera,filmType:timpelapse,startX:degrees,startY:degrees,startZ:degrees,endX:degrees,endY:degrees,endZ:degrees,"
+//"auto,cameraType:camera,filmType:timpelapse,startX:degrees,startY:degrees,startZ:degrees,endX:degrees,endY:degrees,endZ:degrees,"
 
 int array_size;
 String mode; //auto or manual
@@ -28,7 +28,7 @@ void loop() {
   if (mySerial.available()) {
     c = mySerial.readString();  
     //below are sample strings. One is manual and one is auto
-    //c = "manual,up,manual,right,manual,left,"; 
+    //c = "manual,up,manual,right,manual,left,manual,photo,"; 
     //c = "auto,cameraType:camera,filmType:timpelapse,startX:degrees,startY:12,startZ:0,endX:degrees,endY:80,endZ:15,";
     Serial.print("Original: ");
     Serial.println(c);
@@ -46,7 +46,7 @@ String * parseCommand(String s){ //separates string whenever a comma is read
     }
     
     array_size = commas;
-    String myarray[commas]; //size of array is num of periods
+    String myarray[commas]; //size of array is number of commas
     String temp = "";
     int index = 0;
     for (int i = 0; i < s.length(); i++){ 
@@ -59,10 +59,18 @@ String * parseCommand(String s){ //separates string whenever a comma is read
           temp = "";  
         }
     }
-    mode = myarray[0];
-    Serial.println("Parsed Strings: "); //Separated commands are in this for loop
-    for (int j = 1; j < array_size; j++){
-        if (mode == "manual" && j%2 != 0){ //if manual mode, then commands only have odd index
+    mode = myarray[0]; //the first string found should be "auto" or "manual" so it knows what mode
+    Serial.println("Parsed Strings: "); //Separated strings are in this for loop
+    for (int j = 1; j < array_size; j++){ //j starts at 1 because 0 index is the mode
+        if (mode == "manual" && j%2 != 0){ //if manual mode, then commands only have odd index because every other string is "manual"
+          //here is where the manual commands can be accessed
+          //myarray[j] will be a manual command so up, left, down, right, photo
+          //Up to yall to decide what each manual command will do
+          //if(myarray[j] == "left") { rotateStepper1(-90);}
+          //if(myarray[j] == "right") { rotateStepper1(90);}
+          //if(myarray[j] == "up") { rotateStepper2(45);}
+          //if(myarray[j] == "down") { rotateStepper2(-45);}
+          //if(myarray[j] == "photo") { takePicture();}
           Serial.println(myarray[j]); //modify code here to use
         }
         
@@ -72,46 +80,55 @@ String * parseCommand(String s){ //separates string whenever a comma is read
         }
         
     }
-    
+    //once automaticMode function is worked on, it should be called here
+    //automaticMode(all the variables that need to be input)
     return myarray;
 }
 
-void SeparateKey(String s){ //separates the key:value string into 2 strings. 1 for key and 1 for value
+
+//separates the key:value string into 2 strings. 1 for key and 1 for value
+//Also converts the values from strings to doubles if that's necessary
+void SeparateKey(String s){ 
     String key = "";
     String value = "";
     bool endofkey = false;
     int index = 0;
     for (int i = 0; i < s.length(); i++){ 
-        if (s[i] != ':' && !endofkey){
+        if (s[i] != ':' && !endofkey){ //if the char is not a colon and no colon found, add char to key string
           key += s[i];
         }
-        if (s[i] == ':'){
+        if (s[i] == ':'){ ////if the char is a colon, key is done and value is next
           endofkey = true;  
         }
-        if (s[i] != ':' && endofkey){
+        if (s[i] != ':' && endofkey){ //if the char is not a colon and colon already found, add char to value string
           value += s[i];
         }
     }
+    //prints key and value for testing
     Serial.print("Key: ");
     Serial.println(key);
     Serial.print("Value: ");
     Serial.println(value);
+    
     double dVal;
-    //Might need to make the below vars into global vars 
+  
+    //The code below should be modified depending on how exactly you want the automatic commands to work
+    //Probably need to make these global variables
     double xStart;
     double xEnd;
     double yStart;
     double yEnd;
     double zStart;
     double zEnd;
-    //a few lines so that the values become ints/doubles instead of strings
+    //a few lines so that the values for certain keys become ints/doubles instead of strings
     if (key == "startX" || key == "endX" || key == "startY" || key == "endY" || key == "startZ" || key == "endZ"){
         const char *mychar = value.c_str();
         dVal = atof(mychar);
-        Serial.println(dVal);
+        Serial.println(dVal); //prints just the double value
     }
 
-    //assigns double values to the corresponding variables. For passing values to function
+    //assigns double values to the corresponding variable 
+    //Since this function only takes 1 part of the command at a time, it needs to store values before passing them to automaticMode function
     if (strcmp(key.c_str(),"startX")==0) {
         xStart = dVal;
     } 
@@ -135,8 +152,9 @@ void SeparateKey(String s){ //separates the key:value string into 2 strings. 1 f
 }
 
 
-//maybe make ints into doubles
-void automaticMode(int xStart, int xEnd, int yStart, int yEnd, int zStart, int zEnd, String mode, float totaltime, float shutterspeed){
+//This function should take in all of the values from an automatic command and perform the corresponding action
+//Not sure what the inputs are right now or what they do
+void automaticMode(double xStart, double xEnd, double yStart, double yEnd, double zStart, double zEnd, String mode, float totaltime, float shutterspeed){
     
 }
 
