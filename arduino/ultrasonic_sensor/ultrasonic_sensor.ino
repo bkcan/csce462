@@ -90,6 +90,11 @@ void loop() {
     rotateDeg_Right(0, 0.03);
     rotateDeg_Left(0, 0.03);
   }
+  else if ((distance_U > 5 && distance_U < 25) && (distance_D > 5 && distance_D < 25))
+  {
+    rotateDeg_Up(0, 0.03);
+    rotateDeg_Down(0, 0.03);
+  }
   else if (distance_L > 5 && distance_L < 25)
   {
     rotateDeg_Left(10, 0.03);
@@ -97,12 +102,6 @@ void loop() {
   else if (distance_R > 5 && distance_R < 25)
   {
     rotateDeg_Right(-10, 0.03);
-  }
-
-  else if ((distance_U > 5 && distance_U < 25) && (distance_D > 5 && distance_D < 25))
-  {
-    rotateDeg_Up(0, 0.03);
-    rotateDeg_Down(0, 0.03);
   }
   else if (distance_U > 5 && distance_U < 25)
   {
